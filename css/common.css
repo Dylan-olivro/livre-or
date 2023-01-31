@@ -64,4 +64,11 @@ footer i:hover {
   header a {
     padding: 0.4rem;
   }
+  nav {
+    margin: auto;
+    text-align: center;
+  }
+  header a:last-child {
+    display: block;
+  }
 }

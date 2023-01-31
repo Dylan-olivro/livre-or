@@ -45,15 +45,16 @@ require("./include/config.php");
             if (isset($_POST['envoi'])) {
                 $login = htmlspecialchars($_POST['login']);
                 $password = $_POST['password']; // md5'() pour crypet le mdp
+                $cpassword = $_POST['cpassword']; // md5'() pour crypet le mdp
 
                 $recupUser = $bdd->prepare("SELECT * FROM utilisateurs WHERE login = ?");
                 $recupUser->execute([$login]);
 
-                if (empty($login) || empty($password) || empty($_POST['cpassword'])) {
+                if (empty($login) || empty($password) || empty($cpassword)) {
                     echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspVeuillez complétez tous les champs.</p>";
                 } elseif (!preg_match("#^[a-z0-9]+$#", $login)) {
                     echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspLe login doit être renseigné en lettres minuscules sans accents, sans caractères spéciaux.</p>";
-                } elseif ($password != $_POST['cpassword']) {
+                } elseif ($password != $cpassword) {
                     echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspLes deux mots de passe sont differents.</p>";
                 } elseif ($recupUser->rowCount() > 0) {
                     echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspCe login est déjà utilisé.</p>";
