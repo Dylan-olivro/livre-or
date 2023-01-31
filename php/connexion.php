@@ -46,8 +46,9 @@ require "./include/config.php";
                 if (!empty($login) && !empty($password)) {
                     $recupUser = $bdd->prepare("SELECT * FROM utilisateurs WHERE login = ? AND password = ?");
                     $recupUser->execute([$login, $password]);
-
-                    if ($recupUser->rowCount() > 0) {
+                    if (!preg_match("#^[a-z0-9]+$#", $login)) {
+                        echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspLe login doit être renseigné en lettres minuscules sans accents, sans caractères spéciaux.</p>";
+                    } elseif ($recupUser->rowCount() > 0) {
                         $_SESSION['login'] = $login;
                         $_SESSION['password'] = $password;
                         $recupUser = $recupUser->fetchAll(PDO::FETCH_ASSOC);

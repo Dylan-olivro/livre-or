@@ -38,7 +38,7 @@ if ($_SESSION['login'] == false) {
     <main>
         <form action="" method="post">
             <h3>Écris un commentaire</h3>
-            <textarea name="commentaire"></textarea>
+            <textarea name="commentaire" autofocus></textarea>
             <?php
             if (isset($_POST['envoi'])) {
                 $commentaire = htmlspecialchars($_POST['commentaire']);
@@ -50,7 +50,7 @@ if ($_SESSION['login'] == false) {
 
                     $getUser->bindValue(":id_utilisateur", $userId);
                     $getUser->execute([$commentaire, $userId, $date]);
-                    header("Location: commentaire.php");
+                    header("Location: livre-or.php");
                 } else {
                     echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspVeuillez écrire un commentaire</p>";
                 }

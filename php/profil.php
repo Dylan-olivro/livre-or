@@ -39,15 +39,16 @@ require "./include/config.php";
             <input type="text" name="login" id="login" value="<?= $_SESSION['login']  ?>" required />
             <label for="password">Password</label>
             <input type="password" name="password" id="password" required />
-            <!-- <label for="newpassword">Nouveau Password</label>
+            <label for="newpassword">Nouveau Password</label>
             <input type="password" name="newpassword" id="newpassword" />
             <label for="cnewpassword">Confirmation</label>
-            <input type="password" name="cnewpassword" id="cnewpassword" /> -->
+            <input type="password" name="cnewpassword" id="cnewpassword" />
             <?php
             if (isset($_POST['envoi'])) {
                 $login = htmlspecialchars($_POST['login']);
                 $password = $_POST['password']; // md5'() pour crypet le 
-                // $newpassword = $_POST['newpassword'];
+                $newpassword = $_POST['newpassword'];
+                $cnewpassword = $_POST['cnewpassword'];
                 $id = $_SESSION['id'];
 
                 $recupUser = $bdd->prepare("SELECT * FROM utilisateurs WHERE login = ? AND id != ?");
@@ -58,38 +59,26 @@ require "./include/config.php";
                     echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspVeuillez complétez tous les champs.</p>";
                 } elseif (!preg_match("#^[a-z0-9]+$#", $login)) {
                     echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspLe login doit être renseigné en lettres minuscules sans accents, sans caractères spéciaux.</p>";
-                } elseif ($password != $_POST['password']) {
-                    echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspLes deux mots de passe sont differents.</p>";
                 } elseif ($password != $_SESSION['password']) {
                     echo  "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspCe n'est pas le bon mot de passe</p>";
                 } elseif ($recupUser->rowCount() > 0) {
                     echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspCe login est déjà utilisé.</p>";
                 } else {
-                    $insertUser->execute([$login, $password, $id]);
-                    $_SESSION['login'] = $login;
-                    $_SESSION['password'] = $password;
-                    header("Location: profil.php");
+                    if ($newpassword == $_SESSION['password'] && $newpassword == $password) {
+                        echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspMot de passe similaire</p>";
+                    } elseif ($newpassword == $cnewpassword && $newpassword != null && $cnewpassword != null) {
+                        $insertUser->execute([$login, $newpassword, $id]);
+                        $_SESSION['login'] = $login;
+                        $_SESSION['password'] = $newpassword;
+                        header("Location: profil.php");
+                    } else {
+                        $insertUser->execute([$login, $password, $id]);
+                        $_SESSION['login'] = $login;
+                        $_SESSION['password'] = $password;
+                        header("Location: profil.php");
+                    }
                 }
             }
-
-            // // if (empty($login) || empty($password)) {
-            //     echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspVeuillez complétez tous les champs.</p>";
-            // } elseif (!preg_match("#^[a-z0-9]+$#", $login)) {
-            //     echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspLe login doit être renseigné en lettres minuscules sans accents, sans caractères spéciaux.</p>";
-            // } elseif ($newpassword == NULL) {
-            //     $password != $_SESSION['users'][0]['password'];
-            //     // echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspLes deux mots de passe sont differents.</p>";
-            // } elseif ($password != $_SESSION['users'][0]['password']) {
-            //     echo  "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspCe n'est pas le bon mot de passe</p>";
-            // } elseif ($recupUser->rowCount() > 0) {
-            //     echo "<p><i class='fa-solid fa-triangle-exclamation'></i>&nbspCe login est déjà utilisé.</p>";
-            // } else {
-            //     $insertUser->execute([$login, $newpassword, $id]);
-            //     $_SESSION['users'][0]['login'] = $login;
-            //     $_SESSION['users'][0]['password'] = $password;
-            //     header("Location: profil.php");
-            // }
-            // var_dump($_SESSION);
             ?>
             <input type="submit" name="envoi" id="button" value="Edit">
         </form>

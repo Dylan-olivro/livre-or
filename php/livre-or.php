@@ -49,8 +49,23 @@ require "./include/config.php";
                 <?php for ($i = 0; $i < sizeof($livreor); $i++) : ?>
                     <tr>
                         <td class="date"><?= $livreor[$i]['date'] ?></td>
-                        <td class="login"><i class="fa-solid fa-user"></i><?= $livreor[$i]['login'] ?></td>
-                        <td class="comment"><?= $livreor[$i]['commentaire'] ?></td>
+                        <?php
+                        if ($livreor[$i]['login'] === "admin") { ?>
+                            <td class="login"><i class="fa-solid fa-user admin"></i><?= $livreor[$i]['login']; ?> </td>
+                            <style>
+                                .admin {
+                                    background-color: red;
+                                }
+                            </style>
+                        <?php     } else { ?>
+                            <td class="login"><i class="fa-solid fa-user user"></i><?= $livreor[$i]['login']; ?> </td>
+
+                            <style>
+                                .user {
+                                    background-color: blue;
+                                }
+                            </style>
+                        <?php } ?> <td class="comment"><?= $livreor[$i]['commentaire'] ?></td>
                     </tr>
                 <?php endfor; ?>
             </tbody>
