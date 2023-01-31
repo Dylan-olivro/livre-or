@@ -47,7 +47,7 @@ form p {
 form p i {
   color: yellow;
 }
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 550px) {
   form {
     width: 100%;
   }
